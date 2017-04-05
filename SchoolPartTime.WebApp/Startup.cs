@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SchoolPartTime.Common;
+using SchoolPartTime.Common.IManagers;
+using SchoolPartTime.Core;
+using MySQL.Data.EntityFrameworkCore.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace SchoolPartTime.WebApp
 {
@@ -27,8 +32,12 @@ namespace SchoolPartTime.WebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //注入数据库上下文
+            services.AddDbContext<ApplicationDbContext>(options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")));
             // Add framework services.
             services.AddMvc();
+            //注入Manager服务
+            services.AddTransient<IAccountManager, AccountManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,10 +56,20 @@ namespace SchoolPartTime.WebApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationScheme = "IdeaCoreUser",
+                LoginPath = new PathString("/Account/Login/"),
+                AccessDeniedPath = new PathString("/Account/Forbidden/"),
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
+            });
+
             app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("areaRoute", "{area:exists}/{controller}/{action=Index}");
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

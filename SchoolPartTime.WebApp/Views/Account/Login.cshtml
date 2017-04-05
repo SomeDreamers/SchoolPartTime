@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "_AccountLayout";
+}
+
+@section scripts{
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //登录按钮点击事件
+            $("form").validate({
+                submitHandler: function () {
+                    $.post("/Account/Authenticate", { Name: $("#Name").val(), Password: $("#Password").val() }, function (result) {
+                        if (result.isSuccess) {
+                            window.location.href = "/Home/Index";
+                        } else {
+                            alert(result.message);
+                        }
+                    });
+                }
+            })
+        })
+    </script>
+}
+
+@model User
+
+@using (Html.BeginForm("", ""))
+{
+    <div class="form-horizontal">
+        <h1><span class="glyphicon glyphicon-tree-deciduous">登录</span></h1>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, "用户名", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, "密码", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type = "password" })
+                @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="登录" class="btn btn-default btn-primary login-btn" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a href="/Account/Register"><span class="glyphicon glyphicon-pencil">注册</span></a>
+            </div>
+        </div>
+    </div>
+}

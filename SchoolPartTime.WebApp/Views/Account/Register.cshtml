@@ -1,0 +1,120 @@
+﻿@{
+    Layout = "_AccountLayout";
+}
+
+@section styles{
+    <style type="text/css">
+        .form-inline .form-control {
+            width: 100%;
+        }
+    </style>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $("#Role").change(function () {
+                if (Number($(this).val()) == 2) {   //用户
+                    $(".business-info").hide();
+                } else {                            //商家
+                    $(".business-info").show();
+                }
+            });
+
+        })
+    </script>
+}
+
+@model UserModel
+
+@using (Html.BeginForm("Register", "Account"))
+{
+    <div class="form-horizontal">
+        <h1><spna class="glyphicon glyphicon-pencil"></spna>注册</h1>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Role, "角色", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.DropDownListFor(model => model.Role, new List<SelectListItem> {
+                    new SelectListItem { Text = RoleType.User.GetTextVaule(), Value = ((int)RoleType.User).ToString() },
+                    new SelectListItem { Text = RoleType.Business.GetTextVaule(), Value = ((int)RoleType.Business).ToString() }
+                }, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Role, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, "用户名", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Name, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, "密码", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Password, new { @class = "form-control", type="password" })
+                @Html.ValidationMessageFor(model => model.Password, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SurePassword, "密码确认", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.SurePassword, new { @class = "form-control", type = "password" })
+                @Html.ValidationMessageFor(model => model.SurePassword, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Tell, "电话", new { @class = "control-label col-md-2" })
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Tell, new { @class = "form-control", type = "tel" })
+                @Html.ValidationMessageFor(model => model.Tell, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="business-info" hidden>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BusinessName, "商家名称", new { @class = "control-label col-md-2" })
+                <div class="col-md-10 form-inline">
+                    @Html.TextBoxFor(model => model.BusinessName, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.BusinessName, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description, "商家描述", new { @class = "control-label col-md-2" })
+                <div class="col-md-10 form-inline">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Description, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Address, "商家地址", new { @class = "control-label col-md-2" })
+                <div class="col-md-10 form-inline">
+                    @Html.TextBoxFor(model => model.Address, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Address, "", htmlAttributes: new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a href="/Account/Authenticate"><input type="submit" value="注册" class="btn btn-default btn-primary" /></a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <a href="/Account/Login"><span class="glyphicon glyphicon-tree-deciduous">登录</span></a>
+            </div>
+        </div>
+    </div>
+}
