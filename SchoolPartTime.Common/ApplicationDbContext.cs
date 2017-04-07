@@ -18,6 +18,11 @@ namespace SchoolPartTime.Common
         /// </summary>
         public DbSet<Business> Business { get; set; }
 
+        /// <summary>
+        /// 兼职信息表
+        /// </summary>
+        public DbSet<Job> Job { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

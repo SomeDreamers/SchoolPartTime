@@ -55,6 +55,7 @@ namespace SchoolPartTime.Core
             User user = model.GetUser();
             context.User.Add(user);
             await context.SaveChangesAsync();
+            model.Id = user.Id;
             //商家
             if (model.Role == (int)RoleType.Business)
             {

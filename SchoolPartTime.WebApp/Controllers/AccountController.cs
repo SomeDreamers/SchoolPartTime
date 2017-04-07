@@ -104,9 +104,17 @@ namespace SchoolPartTime.WebApp.Controllers
             //存储用户注册信息
             await accountManager.RegisterAsync(userModel);
             //保存成功后自动登录
-            User user = userModel.GetUser();
-            user.Password = userModel.SurePassword;
-            return RedirectToAction("Authenticate", "Account", user);
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, userModel.Name, ClaimValueTypes.String), new Claim(ClaimTypes.Role, ((RoleType)userModel.Role).GetDescription(), ClaimValueTypes.String), new Claim(ClaimTypes.Sid, userModel.Id.ToString(), ClaimValueTypes.String) };
+            var userIdentity = new ClaimsIdentity(claims, "Customer");
+            var userPrincipal = new ClaimsPrincipal(userIdentity);
+            await HttpContext.Authentication.SignInAsync("IdeaCoreUser", userPrincipal,
+                new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                    IsPersistent = false,
+                    AllowRefresh = false
+                });
+            return RedirectToAction("Index", "Home");
         }
 
         /// <summary>
