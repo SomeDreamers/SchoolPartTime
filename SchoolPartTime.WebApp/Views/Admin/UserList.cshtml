@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "用户管理";
+}
+
+@model UserListView
+
+@section styles{
+    <style type="text/css">
+        .zlz-search-bar {
+            display: inline;
+        }
+
+        .zlz-search-item {
+            display: inline;
+            margin-left: 10px;
+        }
+
+        .zlz-search-btn {
+            display: inline;
+            margin-left: 10px;
+        }
+
+        .zlz-search-bar .form-control {
+            display: inline;
+            width: 15%;
+        }
+        
+    </style>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $.jqPaginator('#pagination', {
+                totalPages: parseInt($("#PageCount").val()),
+                visiblePages: 5,  //设置最多显示的页码数
+                currentPage: parseInt($("#Page").val()) + 1,
+                first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type == "change") {
+                        loadData(page);
+                    }
+                }
+            });
+            function loadData(page) {
+                $("#Page").val(page - 1);
+                $("form").submit();
+            };
+        });
+    </script>
+}
+
+<h2><span class="glyphicon glyphicon-user"></span>@ViewData["Title"]</h2>
+<form>
+    <div class="well well-sm">
+        <div class="zlz-search-bar">
+            <span class="glyphicon glyphicon-search"></span>
+            <div class="zlz-search-item">
+                @Html.Label("Role", "角色:", new { @class = "control-label" })
+                @Html.DropDownList("Role", RoleHelper.GetRoleItems(true), new { @class = "form-control" })
+            </div>
+            <div class="zlz-search-item">
+                @Html.Label("Name", "姓名:", new { @class = "control-label" })
+                @Html.TextBox("Name", "", htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="zlz-search-item">
+                @Html.Label("Tell", "电话:", new { @class = "control-label" })
+                @Html.TextBox("Tell", "", htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="zlz-search-btn form-group">
+                <input type="submit" value="搜索" class="btn btn-default btn-success" />
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>用户名</th>
+                <th>角色</th>
+                <th>电话</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Users.Count; i++)
+            {
+                var item = Model.Users[i];
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@item.Name</td>
+                    <td>@(((RoleType)item.Role).GetTextVaule())</td>
+                    <td>@item.Tell</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <ul class="pagination" id="pagination"><li class="first disabled" jp-role="first" jp-data="1"><a href="javascript:;">首页</a></li><li class="prev disabled" jp-role="prev" jp-data="0"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li><li class="page active" jp-role="page" jp-data="1"><a href="javascript:;">1</a></li><li class="page" jp-role="page" jp-data="2"><a href="javascript:;">2</a></li><li class="page" jp-role="page" jp-data="3"><a href="javascript:;">3</a></li><li class="page" jp-role="page" jp-data="4"><a href="javascript:;">4</a></li><li class="page" jp-role="page" jp-data="5"><a href="javascript:;">5</a></li><li class="page" jp-role="page" jp-data="6"><a href="javascript:;">6</a></li><li class="page" jp-role="page" jp-data="7"><a href="javascript:;">7</a></li><li class="next" jp-role="next" jp-data="2"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li><li class="last" jp-role="last" jp-data="12"><a href="javascript:;">末页</a></li></ul>
+        @Html.Hidden("Total", Model.Total)
+        @Html.Hidden("Page", Model.Page)
+        @Html.Hidden("Size", Model.Size)
+        @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
+    </div>
+
+</form>
+

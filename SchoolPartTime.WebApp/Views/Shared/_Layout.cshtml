@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SchoolPartTime.WebApp</title>
+    <title>@ViewData["Title"]</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -30,20 +30,21 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">SchoolPartTime.WebApp</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">校园兼职系统</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>*@
+                    @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.System.GetDescription())
+                    {
+                        <li><a asp-area="" asp-controller="Admin" asp-action="UserList">用户管理</a></li>
+                        <li><a asp-area="" asp-controller="Admin" asp-action="JobList">兼职管理</a></li>
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Statics">统计</a></li>
+                    }
+                    else if(Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
                     {
                         <li><a asp-area="" asp-controller="Job" asp-action="Create">我要招聘</a></li>
                         <li><a asp-area="" asp-controller="Job" asp-action="JobList">我的招聘</a></li>
-                    }
-                    else
-                    {
-                        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                     }
                     
                 </ul>
@@ -70,8 +71,6 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap-datetimepicker.zh-CN.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"

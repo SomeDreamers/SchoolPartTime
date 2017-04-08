@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\lib\bootstrap\dist\js\jqPaginator.min.js" />
     <Content Include="wwwroot\lib\bootstrap\dist\css\bootstrap-datetimepicker.min.css" />
     <Content Include="wwwroot\lib\bootstrap\dist\js\bootstrap-datetimepicker.min.js" />
     <Content Include="wwwroot\lib\bootstrap\dist\js\bootstrap-datetimepicker.zh-CN.js" />

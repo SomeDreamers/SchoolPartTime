@@ -44,5 +44,10 @@ namespace SchoolPartTime.Common.Enums
                 default: return "";
             }
         }
+
+        public static int GetValue(this RoleType type)
+        {
+            return (int)type;
+        }
     }
 }
