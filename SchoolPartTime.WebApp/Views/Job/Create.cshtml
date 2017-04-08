@@ -3,41 +3,68 @@
 @{
     ViewData["Title"] = "我要招聘";
 }
+
+@section scripts{
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: "zh-CN",
+        todayBtn: true
+    });
+</script> 
+}
+
 @using (Html.BeginForm("save", "job", new { name = "form", id = "form" }))
 {
-    <div class="container" style="height:750px;" id="jobList">
+    <div class="container form-horizontal" style="height:750px;" id="jobList">
         <div class="row">
             <h1><span class="glyphicon glyphicon-pencil"></span>@ViewData["Title"]</h1>
         </div>
         <div class="form-group">
-            <label for="Name">标题</label>
-            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Title, "", htmlAttributes: new { @class = "text-danger" })
+            <label for="Title" class="control-label col-md-2">标题</label>
+            <div class="col-md-10 form-inline">
+                @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Title, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
         </div>
         <div class="form-group">
-            <label for="Content">内容描述</label>
-            @Html.TextBoxFor(model => model.Content, new { @class = "form-control" })
+            <label for="Content">内容描述和其他要求</label>
+            @Html.TextAreaFor(model => model.Content, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Content, "", htmlAttributes: new { @class = "text-danger" })
         </div>
         <div class="form-group">
-            <label for="Organization">招聘人数</label>
+            <label for="Count">招聘人数</label>
             @Html.TextBoxFor(model => model.Count, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Count, "", htmlAttributes: new { @class = "text-danger" })
         </div>
         <div class="form-group">
-            <label for="Address">招聘开始时间</label>
-            @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control" })
+            <label for="StartTime">招聘开始时间</label>
+            @Html.TextBoxFor(model => model.StartTime, new { @class= "form-control form_datetime" })
             @Html.ValidationMessageFor(model => model.StartTime, "", htmlAttributes: new { @class = "text-danger" })
         </div>
         <div class="form-group">
-            <label for="AgeAsk">招聘结束时间</label>
+            <label for="EndTime">招聘结束时间</label>
             @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.EndTime, "", htmlAttributes: new { @class = "text-danger" })
         </div>
         <div class="form-group">
-            <label for="AgeAsk">薪资(/天)</label>
+            <label for="Salary">薪资(/小时)</label>
             @Html.TextBoxFor(model => model.Salary, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Salary, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <label for="AgeAsk">年龄要求</label>
+            @Html.TextBoxFor(model => model.AgeAsk, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AgeAsk, "", htmlAttributes: new { @class = "text-danger" })
+        </div>
+        <div class="form-group">
+            <div>
+                @Html.Label("SexAsk", "性别要求")
+            </div>
+            <div class="form-inline">
+                @Html.DropDownListFor(model => model.SexAsk, SexTypeHelper.GetItems(showNull: true), new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SexAsk, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
         </div>
         <div>
             <span style="margin-right:100px;margin-left:400px"><button type="submit" class="btn btn-primary">创建</button></span>

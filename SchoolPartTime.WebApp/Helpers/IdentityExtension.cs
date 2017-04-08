@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace ServantApply.WebApp.Helpers
+namespace SchoolPartTime.WebApp.Helpers
 {
     public static class IdentityExtension
     {

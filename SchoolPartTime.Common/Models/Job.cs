@@ -60,5 +60,20 @@ namespace SchoolPartTime.Common.Models
         /// 兼职标识（是否完结）
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 年龄要求
+        /// </summary>
+        public string AgeAsk { get; set; }
+
+        /// <summary>
+        /// 性别要求
+        /// </summary>
+        public int SexAsk { get; set; }
+
+        /// <summary>
+        /// 更新时间
+        /// </summary>
+        public DateTime UpdateTime { get; set; }
     }
 }

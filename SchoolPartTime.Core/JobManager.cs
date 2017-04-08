@@ -24,6 +24,8 @@ namespace SchoolPartTime.Core
         /// <returns></returns>
         public async Task CreateAsync(Job job)
         {
+            var time = DateTime.Now;
+            job.UpdateTime = time;
             context.Job.Add(job);
             await context.SaveChangesAsync();
         }
