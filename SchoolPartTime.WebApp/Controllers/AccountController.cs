@@ -5,6 +5,7 @@ using SchoolPartTime.Common.Enums;
 using SchoolPartTime.Common.IManagers;
 using SchoolPartTime.Common.Models;
 using SchoolPartTime.Common.ViewModels;
+using SchoolPartTime.WebApp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +67,7 @@ namespace SchoolPartTime.WebApp.Controllers
         {
             ReturnResult result = new ReturnResult();
             User customer = await accountManager.GetUserByNameAsync(user.Name);
-            if (customer == null || customer.Password != GetMD5(user.Password))
+            if (customer == null || customer.Password != EncryptionHelper.GetMD5(user.Password))
             {
                 result.IsSuccess = false;
                 result.Message = "用户名或密码错误！";
@@ -100,7 +101,7 @@ namespace SchoolPartTime.WebApp.Controllers
         public async Task<IActionResult> Register(UserModel userModel)
         {
             //密码加密
-            userModel.Password = GetMD5(userModel.Password);
+            userModel.Password = EncryptionHelper.GetMD5(userModel.Password);
             //存储用户注册信息
             await accountManager.RegisterAsync(userModel);
             //保存成功后自动登录
@@ -126,26 +127,6 @@ namespace SchoolPartTime.WebApp.Controllers
         {
             User user = await accountManager.GetUserByNameAsync(Name);
             return user == null;
-        }
-
-        /// <summary>
-        /// MD5加密
-        /// </summary>
-        /// <param name="myString"></param>
-        /// <returns></returns>
-        public static string GetMD5(string myString)
-        {
-            string pwd = "";
-            MD5 md5 = MD5.Create(); //实例化一个md5对像
-            // 加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择　
-            byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(myString));
-            // 通过使用循环，将字节类型的数组转换为字符串，此字符串是常规字符格式化所得
-            for (int i = 0; i < s.Length; i++)
-            {
-                // 将得到的字符串使用十六进制类型格式。格式后的字符是小写的字母，如果使用大写（X）则格式后的字符是大写字符 
-                pwd = pwd + s[i].ToString("X");
-            }
-            return pwd;
         }
     }
 }
