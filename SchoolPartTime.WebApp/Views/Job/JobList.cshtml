@@ -3,28 +3,77 @@
 *@
 @{
 }
-@model List<Job>
-<div class="container" style="min-height:500px" id="questionList">
-   @for (var i = 0; i < Model.Count; i++)
-   {
-       var job = Model[i];
-    <div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <span>@job.Title</span>
-                <span style="float:right"><button style="padding-top:0px;padding-left:20px" type="button" class="btn btn-danger delete" data-question="@job.Id">删除</button></span>
-                <span style="float:right"><a style="padding-top:0px;"  class="btn btn-danger remove" href="/Job/Edit?id=@job.Id">修改</a></span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            <span>更新时间：@job.UpdateTime</span>
-            <span style='float:right'>
-                <a href="/Job/Details?id=@job.Id" class="btn btn-primary">
-                     <span class="glyphicon glyphicon-eye-open"></span>详情
-                </a>
-            </span>
+@model JobListView
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $.jqPaginator('#pagination', {
+                totalPages: parseInt($("#PageCount").val()),
+                visiblePages: 5,  //设置最多显示的页码数
+                currentPage: parseInt($("#Page").val()) + 1,
+                first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type == "change") {
+                        loadData(page);
+                    }
+                }
+            });
+            function loadData(page) {
+                $("#Page").val(page - 1);
+                $("form").submit();
+            };
+
+            $(".delete").click(function () { 
+                var $this = $(this);
+                var id = $this.attr("data-job");
+                var bool = confirm("确认删除吗");
+                if(bool == true){
+                    $.post("/Job/Dalete", { id: id }, function (result) {
+                        if (result.isSuccess) {
+                            window.location.reload();
+
+                        } else {
+                            alert(result.Message);
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+<form>
+    <div class="container" style="min-height:500px" id="questionList">
+        @for (var i = 0; i < Model.Jobs.Count; i++)
+        {
+            var job = Model.Jobs[i];
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <span>@job.Title</span>
+                        <span style="float:right"><button style="padding-top:0px;margin-left:20px" type="button" class="btn btn-danger delete" data-job="@job.Id">删除</button></span>
+                        <span style="float:right"><a style="padding-top:0px;" class="btn btn-danger remove" href="/Job/Edit?id=@job.Id">修改</a></span>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <span>更新时间：@job.UpdateTime</span>
+                    <span style='float:right'>
+                        <a href="/Job/Details?id=@job.Id" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-eye-open"></span>详情
+                        </a>
+                    </span>
+                </div>
+            </div>
+
+        }
+        <div>
+            <ul class="pagination" id="pagination"></ul>
+            @Html.Hidden("Page", Model.Page)
+            @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
         </div>
     </div>
-
-   }
-</div>
+</form>

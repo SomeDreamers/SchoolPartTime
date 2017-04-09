@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SchoolPartTime.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SchoolPartTime.Common.Models
+namespace SchoolPartTime.Common.ViewModels
 {
-    public class Job
+    public class JobModel
     {
         /// <summary>
         /// 主键ID
@@ -70,5 +71,41 @@ namespace SchoolPartTime.Common.Models
         /// 更新时间
         /// </summary>
         public DateTime UpdateTime { get; set; }
+
+        //********************表外字段************************//
+        /// <summary>
+        /// 商家名称
+        /// </summary>
+        public string BusinessName { get; set; }
+        /// <summary>
+        /// 商家地址
+        /// </summary>
+        public string BusinessAddress { get; set; }
+        /// <summary>
+        /// 联系电话
+        /// </summary>
+       public string Tell { get; set; }
+
+        public JobModel()
+        {
+
+        }
+
+        public JobModel(Job job)
+        {
+            Id = job.Id;
+            BusinessId = job.BusinessId;
+            Title = job.Title;
+            Content = job.Content;
+            Count = job.Count;
+            StartTime = job.StartTime;
+            EndTime = job.EndTime;
+            UpdateTime = job.UpdateTime;
+            Salary = job.Salary;
+            SexAsk = job.SexAsk;
+            AgeAsk = job.AgeAsk;
+            Status = job.Status;
+        }
     }
 }
+

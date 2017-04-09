@@ -1,0 +1,37 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model JobModel
+<div class="panel panel-default">
+    <h2 align="center">@Model.BusinessName</h2>
+    <div class="panel-heading">
+        <h4>岗位：@Model.Title</h4>
+    </div>
+    <table class="table">
+        <tr><td><b>工作地点</b></td><td>@Model.BusinessAddress</td></tr>
+        <tr><td><b>招聘人数</b></td><td>@Model.Count</td></tr>
+        <tr><td><b>性别要求</b></td><td>@(((SexType)Model.SexAsk).GetDescription())</td></tr>
+        <tr><td><b>年龄要求</b></td><td>@Model.AgeAsk</td></tr>
+        <tr><td><b>薪资(/天)</b></td><td>@Model.Salary</td></tr>
+        <tr><td><b>更新日期</b></td><td>@Model.UpdateTime</td></tr>
+        <tr><td><b>联系电话</b></td><td>@Model.Tell</td></tr>
+    </table>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            职位描述及其他要求
+        </h3>
+    </div>
+    <div class="panel-body">
+        @Model.Content
+    </div>
+</div>
+
+<div>
+    <h2 align="center" class="text-success" style="font:bold">留言区</h2>
+
+</div>
+

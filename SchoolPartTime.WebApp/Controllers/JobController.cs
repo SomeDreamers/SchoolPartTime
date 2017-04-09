@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SchoolPartTime.WebApp.Helpers;
+using SchoolPartTime.Common;
+using SchoolPartTime.Common.ViewModels;
 
 namespace SchoolPartTime.WebApp.Controllers
 {
@@ -31,8 +34,10 @@ namespace SchoolPartTime.WebApp.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Save(Job job)
         {
+            var id = HttpContext.User.Identity.Uid();
+            job.UserId = id;
             await jobManager.CreateAsync(job);
-            return View("JobList", "Job");
+            return RedirectToAction("JobList", "Job",new QueryPage());
         }
 
         /// <summary>
@@ -40,10 +45,57 @@ namespace SchoolPartTime.WebApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> JobList(long id)
+        public async Task<IActionResult> JobList(QueryPage page)
         {
-            var jobList =await jobManager.JobList(id);
+            var id = HttpContext.User.Identity.Uid();
+            var jobList =await jobManager.JobList(page,id);
             return View("JobList", jobList);
+        }
+        /// <summary>
+        /// 编辑兼职
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Edit(long id)
+        {
+            var job = await jobManager.FindById(id);
+            return View("Edit", job);
+        }
+        /// <summary>
+        /// 更新兼职信息
+        /// </summary>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> SaveEdit(Job job)
+        {
+            var id = HttpContext.User.Identity.Uid();
+            job.UserId = id;
+            await jobManager.Update(job);
+            return RedirectToAction("JobList", "Job", new QueryPage());
+        }
+
+        /// <summary>
+        /// 删除兼职信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Dalete(long id)
+        {
+            await jobManager.Delete(new Job { Id=id});
+            ReturnResult result = new ReturnResult();
+            result.Message = "删除失败";
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 兼职详情
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Details(long id)
+        {
+            JobModel jobModel = await jobManager.Details(id);
+            return View("Details", jobModel);
         }
     }
 }

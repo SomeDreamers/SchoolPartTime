@@ -11,11 +11,11 @@
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
-input,
+/*input,
 select,
 textarea {
-    width: 60%;
-}
+    min-width: 60%;
+}*/
 
 /* Carousel */
 .carousel-caption p {
@@ -34,4 +34,23 @@ textarea {
     .carousel-caption {
         display: none;
     }
+}
+
+.zlz-search-bar {
+    display: inline;
+}
+
+.zlz-search-item {
+    display: inline;
+    margin-left: 10px;
+}
+
+.zlz-search-btn {
+    display: inline;
+    margin-left: 10px;
+}
+
+.zlz-search-bar .form-control {
+    display: inline;
+    width: 15%;
 }

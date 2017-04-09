@@ -5,27 +5,7 @@
 @model UserListView
 
 @section styles{
-    <style type="text/css">
-        .zlz-search-bar {
-            display: inline;
-        }
-
-        .zlz-search-item {
-            display: inline;
-            margin-left: 10px;
-        }
-
-        .zlz-search-btn {
-            display: inline;
-            margin-left: 10px;
-        }
-
-        .zlz-search-bar .form-control {
-            display: inline;
-            width: 15%;
-        }
-        
-    </style>
+    
 }
 
 @section scripts{
@@ -72,7 +52,7 @@
                 @Html.TextBox("Tell", "", htmlAttributes: new { @class = "form-control" })
             </div>
             <div class="zlz-search-btn form-group">
-                <input type="submit" value="搜索" class="btn btn-default btn-success" />
+                <input type="submit" value="搜索" class="btn btn-default btn-primary" />
             </div>
         </div>
     </div>
@@ -102,10 +82,8 @@
     </table>
 
     <div>
-        <ul class="pagination" id="pagination"><li class="first disabled" jp-role="first" jp-data="1"><a href="javascript:;">首页</a></li><li class="prev disabled" jp-role="prev" jp-data="0"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li><li class="page active" jp-role="page" jp-data="1"><a href="javascript:;">1</a></li><li class="page" jp-role="page" jp-data="2"><a href="javascript:;">2</a></li><li class="page" jp-role="page" jp-data="3"><a href="javascript:;">3</a></li><li class="page" jp-role="page" jp-data="4"><a href="javascript:;">4</a></li><li class="page" jp-role="page" jp-data="5"><a href="javascript:;">5</a></li><li class="page" jp-role="page" jp-data="6"><a href="javascript:;">6</a></li><li class="page" jp-role="page" jp-data="7"><a href="javascript:;">7</a></li><li class="next" jp-role="next" jp-data="2"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li><li class="last" jp-role="last" jp-data="12"><a href="javascript:;">末页</a></li></ul>
-        @Html.Hidden("Total", Model.Total)
+        <ul class="pagination" id="pagination"></ul>
         @Html.Hidden("Page", Model.Page)
-        @Html.Hidden("Size", Model.Size)
         @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
     </div>
 
