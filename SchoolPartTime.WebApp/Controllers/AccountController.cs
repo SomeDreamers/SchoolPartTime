@@ -67,7 +67,7 @@ namespace SchoolPartTime.WebApp.Controllers
         {
             ReturnResult result = new ReturnResult();
             User customer = await accountManager.GetUserByNameAsync(user.Name);
-            if (customer == null || customer.Password != GetMD5(user.Password))
+            if (customer == null || customer.Password != EncryptionHelper.GetMD5(user.Password))
             {
                 result.IsSuccess = false;
                 result.Message = "用户名或密码错误！";
@@ -101,7 +101,7 @@ namespace SchoolPartTime.WebApp.Controllers
         public async Task<IActionResult> Register(UserModel userModel)
         {
             //密码加密
-            userModel.Password = GetMD5(userModel.Password);
+            userModel.Password = EncryptionHelper.GetMD5(userModel.Password);
             //存储用户注册信息
             await accountManager.RegisterAsync(userModel);
             //保存成功后自动登录

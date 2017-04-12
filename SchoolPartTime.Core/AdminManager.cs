@@ -51,6 +51,19 @@ namespace SchoolPartTime.Core
             List<User> users = await context.User.FromSql(sql).ToListAsync();
             return new UserListView(queryModel.Page, queryModel.Size, count, users);
         }
+
+        /// <summary>
+        /// 根据ID删除用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> DeleteUserAsync(long id)
+        {
+            ReturnResult result = new ReturnResult();
+            context.User.Remove(new User { Id = id });
+            await context.SaveChangesAsync();
+            return result;
+        }
         #endregion
     }
 }

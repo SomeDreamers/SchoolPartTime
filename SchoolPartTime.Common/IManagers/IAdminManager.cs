@@ -19,5 +19,12 @@ namespace SchoolPartTime.Common.IManagers
         /// <param name="queryModel"></param>
         /// <returns></returns>
         Task<UserListView> GetUserListAsync(UserQuery queryModel);
+
+        /// <summary>
+        /// 根据ID删除用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ReturnResult> DeleteUserAsync(long id);
     }
 }
