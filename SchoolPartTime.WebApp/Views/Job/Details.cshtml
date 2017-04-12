@@ -2,36 +2,144 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+//Layout = "_NoFootLayout";
 }
 @model JobModel
-<div class="panel panel-default">
-    <h2 align="center">@Model.BusinessName</h2>
-    <div class="panel-heading">
-        <h4>岗位：@Model.Title</h4>
-    </div>
-    <table class="table">
-        <tr><td><b>工作地点</b></td><td>@Model.BusinessAddress</td></tr>
-        <tr><td><b>招聘人数</b></td><td>@Model.Count</td></tr>
-        <tr><td><b>性别要求</b></td><td>@(((SexType)Model.SexAsk).GetDescription())</td></tr>
-        <tr><td><b>年龄要求</b></td><td>@Model.AgeAsk</td></tr>
-        <tr><td><b>薪资(/天)</b></td><td>@Model.Salary</td></tr>
-        <tr><td><b>更新日期</b></td><td>@Model.UpdateTime</td></tr>
-        <tr><td><b>联系电话</b></td><td>@Model.Tell</td></tr>
-    </table>
-</div>
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            职位描述及其他要求
-        </h3>
-    </div>
-    <div class="panel-body">
-        @Model.Content
-    </div>
-</div>
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $.jqPaginator('#pagination', {
+                totalPages: parseInt($("#PageCount").val()),
+                visiblePages: 5,  //设置最多显示的页码数
+                currentPage: parseInt($("#Page").val()) + 1,
+                first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type == "change") {
+                        loadData(page);
+                    }
+                }
+            });
+            function loadData(page) {
+                $("#Page").val(page - 1);
+                $("form").submit();
+            };
 
-<div>
-    <h2 align="center" class="text-success" style="font:bold">留言区</h2>
+            $("#message-btn").click(function () {
+                var message = $("#message").val();
+                $.post("/Message/ToMessage", { jobId:@Model.Id,message: message }, function (result) { 
+                    if (result.isSuccess) {
+                        window.location.reload();
+                    } else {
+                        alert(result.Message);
 
-</div>
+                    }
+                });
+            });
+            $(".reply-btn").click(function () {
+                $(this).parent().parent().find(".reply-text").show();
+            });
+            $(".cancel").on("click", function () {
+                $(this).parent().parent().hide();
+            })
+            $(".sure").on("click", function () {
+                var messageId = $(this).parent().parent().find(".reply").attr("data");
+                var message = $(this).parent().parent().find(".reply").val();
+                $.post("/Message/SaveReply", { messageId: messageId, message: message, jobId:@Model.Id}, function (result) { 
+                    if (result.isSuccess) {
+                        window.location.reload();
+                    } else {
+                        alert(result.Message);
+
+                    }
+                });
+            });
+        });
+
+    </script>
+}
+<form action="/Job/Details?id=@Model.Id">
+    <div class="panel panel-default">
+        <h4 style="margin-top:20px">
+            @if (Model.Status == 0)
+            {
+                <span style="float:right"><a href="/Job/JobList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+            }
+            else
+            {
+                <span style="float:right"><a href="/Job/OverList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+
+            }
+        </h4>
+        <h2 align="center">@Model.BusinessName</h2>
+        <div class="panel-heading">
+            <h4>岗位：@Model.Title</h4>
+        </div>
+        <table class="table">
+            <tr><td><b>工作地点</b></td><td>@Model.BusinessAddress</td></tr>
+            <tr><td><b>招聘人数</b></td><td>@Model.Count</td></tr>
+            <tr><td><b>性别要求</b></td><td>@(((SexType)Model.SexAsk).GetDescription())</td></tr>
+            <tr><td><b>年龄要求</b></td><td>@Model.AgeAsk</td></tr>
+            <tr><td><b>薪资(/天)</b></td><td>@Model.Salary</td></tr>
+            <tr><td><b>更新日期</b></td><td>@Model.UpdateTime</td></tr>
+            <tr><td><b>联系电话</b></td><td>@Model.Tell</td></tr>
+        </table>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                职位描述及其他要求
+            </h3>
+        </div>
+        <div class="panel-body">
+            @Model.Content
+        </div>
+    </div>
+   
+@if (Model.Status == 0) { 
+    <div>
+        <h2 align="" class="text-danger" style="font:bold">留言区</h2>
+        <div>
+            <div style="background:#C0C0C0;color:#C0C0C0;height:5px"></div>
+            <h4 class="	glyphicon glyphicon-pencil"> 留言(@Model.ListMessage.Count)</h4>
+            <button style="float:right;margin-top:20px;margin-bottom:20px" class="btn btn-success" id="message-btn">发表留言</button>
+            <span><textarea class="form-control" id="message"></textarea> </span>
+        </div>
+        @for (var i = 0; i < @Model.ListMessage.Count; i++)
+        {
+            var message = Model.ListMessage[i];
+            <div>
+                <div class="well well-sm" style="margin-top:30px;">
+                    <h4>
+                        <span>#@(i + 1)</span>
+                        <span style="color:#7B7B7B;">&nbsp&nbsp @message.WriterName</span>
+                        <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@message.Time)</span>
+                        <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
+                    </h4>
+                    <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
+                    @if (@message.ReplyCount > 0)
+                {
+                        <p><a href="/Message/Toreply?messageId=@message.Id">>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相关评论 @message.ReplyCount 条</a></p>
+                    }
+                    <div style="display:none " class="reply-text">
+                        <input style=" width: 60%;margin-left:330px" type="text" data=@message.Id class="reply" />
+                        <span><button class="btn btn-primary sure">确认</button></span>
+                        <span><button class="btn btn-primary cancel">取消</button></span>
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        <div>
+            <ul class="pagination" id="pagination"></ul>
+            @Html.Hidden("Page", Model.Page)
+            @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
+        </div>
+    </div>
+}
+</form>
 

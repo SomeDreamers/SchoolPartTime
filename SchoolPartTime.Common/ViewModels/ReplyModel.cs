@@ -1,10 +1,11 @@
-﻿using System;
+﻿using SchoolPartTime.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SchoolPartTime.Common.Models
+namespace SchoolPartTime.Common.ViewModels
 {
-    public class Message
+    public class ReplyModel
     {
         /// <summary>
         /// 主键ID
@@ -34,10 +35,31 @@ namespace SchoolPartTime.Common.Models
         /// <summary>
         /// 留言时间
         /// </summary>
-        public DateTime Time{ get; set; }
+        public DateTime Time { get; set; }
         /// <summary>
         /// 留言人名
         /// </summary>
         public string WriterName { get; set; }
+
+        //////////////////////////////
+        /// <summary>
+        /// 回复列表
+        /// </summary>
+        public List<Message> ReplyList{ get; set; }
+
+        public ReplyModel()
+        {
+
+        }
+        public ReplyModel(Message message)
+        {
+            Id = message.Id;
+            WriterId = message.WriterId;
+            JobId = message.JobId;
+            Content = message.Content;
+            ReplyId = message.ReplyId;
+            WriterName = message.WriterName;
+            Time = message.Time;
+        }
     }
 }

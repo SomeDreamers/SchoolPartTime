@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SchoolPartTime.Common.ViewModels
 {
-    public class JobModel
+    public class JobModel:PageViewModel
     {
         /// <summary>
         /// 主键ID
@@ -84,14 +84,24 @@ namespace SchoolPartTime.Common.ViewModels
         /// <summary>
         /// 联系电话
         /// </summary>
-       public string Tell { get; set; }
+        public string Tell { get; set; }
 
-        public JobModel()
+        /// <summary>
+        /// 留言列表
+        /// </summary>
+        public List<MessageModel> ListMessage{ get; set; }
+
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get; set; }
+
+        public JobModel(int page, int size, int total) :base(page,size,total)
         {
 
         }
 
-        public JobModel(Job job)
+        public JobModel(int page, int size, int total,Job job):base(page,size,total)
         {
             Id = job.Id;
             BusinessId = job.BusinessId;

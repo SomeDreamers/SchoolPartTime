@@ -5,6 +5,7 @@ using SchoolPartTime.Common.Enums;
 using SchoolPartTime.Common.IManagers;
 using SchoolPartTime.Common.Models;
 using SchoolPartTime.Common.ViewModels;
+using SchoolPartTime.WebApp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -146,6 +147,66 @@ namespace SchoolPartTime.WebApp.Controllers
                 pwd = pwd + s[i].ToString("X");
             }
             return pwd;
+        }
+
+        /// <summary>
+        /// 商家用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> BusinessUser()
+        {
+            var id = HttpContext.User.Identity.Uid();
+            UserModel model = await accountManager.BusinessUser(id);
+            return View("BusinessUser",model);
+        }
+
+        /// <summary>
+        /// 编辑商家信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> BusinessEdit()
+        {
+            var id = HttpContext.User.Identity.Uid();
+            UserModel model = await accountManager.BusinessUser(id);
+            return View("BusinessEdit", model);
+        }
+
+        /// <summary>
+        /// 报存商家信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> SaveBusinessEdit(UserModel model)
+        {
+            long id = HttpContext.User.Identity.Uid();
+            await accountManager.SaveBusinessEdit(id,model);
+            return RedirectToAction("BusinessUser");
+        }
+
+        /// <summary>
+        /// 显示修改密码页面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ToEditPassword()
+        {
+            return View("EditPassword");
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> EditPassword(string oldPassword,string newPassword)
+        {
+            string oldPW = GetMD5(oldPassword);
+            string newPw = GetMD5(newPassword);
+            PasswoModel model = new PasswoModel();
+            model.NewPassword = newPw;
+            model.OldPassword = oldPW;
+            long id = HttpContext.User.Identity.Uid();
+            ReturnResult result = await accountManager.EditPassword(id,model);
+            return Json(result);
         }
     }
 }

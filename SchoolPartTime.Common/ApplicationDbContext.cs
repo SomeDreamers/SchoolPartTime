@@ -23,6 +23,11 @@ namespace SchoolPartTime.Common
         /// </summary>
         public DbSet<Job> Job { get; set; }
 
+        /// <summary>
+        /// 留言表
+        /// </summary>
+        public DbSet<Message> Message { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
 

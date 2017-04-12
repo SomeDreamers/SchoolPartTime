@@ -45,6 +45,25 @@ namespace SchoolPartTime.Common.IManagers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<JobModel> Details(long id);
+        Task<JobModel> Details(long id,QueryPage page);
+
+        /// <summary>
+        /// 判断兼职是否完结
+        /// </summary>
+        /// <returns></returns>
+        Task JudgeStatus();
+        /// <summary>
+        ///将兼职移至完结
+        /// </summary>
+        /// <returns></returns>
+        Task MoveJob(long jobId);
+
+        /// <summary>
+        /// 完结兼职列表
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <returns></returns>
+        Task<JobListView> OverList(long jobId, QueryPage page);
+
     }
 }

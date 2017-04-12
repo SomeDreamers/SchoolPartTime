@@ -40,6 +40,7 @@ namespace SchoolPartTime.WebApp
             services.AddTransient<IAccountManager, AccountManager>();
             services.AddTransient<IJobManager, JobManager>();
             services.AddTransient<IAdminManager, AdminManager>();
+            services.AddTransient<IMessageManager , MessageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -31,5 +31,26 @@ namespace SchoolPartTime.Common.IManagers
         /// <param name="user"></param>
         /// <returns></returns>
         Task RegisterAsync(UserModel model);
+
+        /// <summary>
+        /// 获取商家用户信息
+        /// </summary>
+        /// <typeparam name=""></typeparam>
+        /// <returns></returns>
+        Task<UserModel> BusinessUser(long id);
+
+        /// <summary>
+        /// 报存商家信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task SaveBusinessEdit(long id,UserModel model);
+
+        /// <summary>
+        /// 修改密骂
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<ReturnResult> EditPassword(long id,PasswoModel model);
     }
 }

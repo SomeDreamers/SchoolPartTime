@@ -41,24 +41,18 @@
                         <li><a asp-area="" asp-controller="Admin" asp-action="JobList">兼职管理</a></li>
                         <li><a asp-area="" asp-controller="Admin" asp-action="Statics">统计</a></li>
                     }
-                    else if(Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
+                    else if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
                     {
                         <li><a asp-area="" asp-controller="Job" asp-action="Create">我要招聘</a></li>
                         <li><a asp-area="" asp-controller="Job" asp-action="JobList">我的招聘</a></li>
-                        <li><a asp-area="" asp-controller="Job" asp-action="OverList">完结的兼职</a></li>
-                        <li><a asp-area="" asp-controller="Account" asp-action="BusinessUser">个人信息</a></li>
                     }
-                    
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@Html.ViewContext.HttpContext.User.Identity.Name <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a href="/Account/Logout">退出</a></li>
-                            @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
-                            {
-                                <li><a href="/Account/ToEditPassword">修改密码</a></li>
-                            }
                         </ul>
                     </li>
                 </ul>
@@ -67,10 +61,6 @@
     </nav>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - SchoolPartTime.WebApp</p>
-        </footer>
     </div>
 
     <environment names="Development">
