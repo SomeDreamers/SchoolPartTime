@@ -93,11 +93,18 @@ namespace SchoolPartTime.WebApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> Details(long id,QueryPage page)
+        public async Task<IActionResult> Details(long id, QueryPage tmp)
         {
-            JobModel jobModel = await jobManager.Details(id,page);
+            JobModel jobModel = await jobManager.Details(id, tmp);
             return View("Details", jobModel);
         }
+
+        public async Task<IActionResult> MessageList(long id, QueryPage tmp)
+        {
+            List<MessageModel> models = new List<MessageModel>();
+            return PartialView("_MessageTemplate", models);
+        }
+
         /// <summary>
         /// 将兼职移至完结
         /// </summary>

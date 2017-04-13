@@ -55,10 +55,10 @@
 
     </script>
 }
-<form action="/Job/Details?id=@Model.Id">
+
     <div class="panel panel-default">
         <h4 style="margin-top:20px">
-            @if (Model.Status == 0)
+            @if (Model.Status == (int)JobStatus.Underway)
             {
                 <span style="float:right"><a href="/Job/JobList?id=@Model.Id" class="btn btn-primary">返回</a></span>
             }
@@ -106,7 +106,7 @@
         {
             var message = Model.MessageListView.ListMessage[i];
             <div>
-                <div class="well well-sm" style="margin-top:30px;">
+                <div class="well well-sm" style="margin-top:20px;margin-bottom: 0px;">
                     <h4>
                         <span>#@(i + 1)</span>
                         <span style="color:#7B7B7B;">&nbsp&nbsp @message.WriterName</span>
@@ -126,12 +126,14 @@
                 </div>
             </div>
         }
-        <div>
-            <ul class="pagination" id="pagination"></ul>
-            @Html.Hidden("Page", Model.MessageListView.Page)
-            @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
-        </div>
-    </div>
+</div>
 }
+<form>
+    @Html.Hidden("id", Model.Id)
+    <div>
+        <ul class="pagination" id="pagination"></ul>
+        @Html.Hidden("Page", Model.MessageListView.Page)
+        @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
+    </div>
 </form>
 

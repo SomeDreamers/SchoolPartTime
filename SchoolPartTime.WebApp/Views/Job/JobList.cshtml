@@ -71,7 +71,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <span>@job.Title</span>
-                        @if (job.Status == 0)
+                        @if (job.Status == (int)JobStatus.Underway)
                         {
                             <span style="float:right"><button style="padding-top:0px;margin-left:10px" type="button" class="btn btn-danger over" data-jobId="@job.Id">结束招聘</button></span>
                             <span style="float:right"><a style="padding-top:0px;margin-left:10px" class="btn btn-danger remove" href="/Job/Edit?id=@job.Id">修改</a></span>

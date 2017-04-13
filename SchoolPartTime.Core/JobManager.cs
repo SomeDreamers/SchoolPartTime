@@ -157,7 +157,7 @@ namespace SchoolPartTime.Core
         public async Task MoveJob(long jobId)
         {
             Job job = await context.Job.SingleAsync(b => b.Id == jobId);
-            job.Status = 1;
+            job.Status = (int)JobStatus.Finished;
             context.Job.Update(job);
             await context.SaveChangesAsync();
         }
@@ -170,10 +170,10 @@ namespace SchoolPartTime.Core
         public async Task<JobListView> OverList(long jobId, QueryPage page)
         {
             //查询总数
-            var count = await context.Job.Where(b => b.UserId == jobId && b.Status == 1).CountAsync();
+            var count = await context.Job.Where(b => b.UserId == jobId && b.Status == (int)JobStatus.Finished).CountAsync();
             string sql = @"SELECT * FROM Job WHERE userId =" + jobId;
             //设置排序
-            sql += " AND Status=1   ";
+            sql += " AND Status="+ (int)JobStatus.Finished;
             sql += " ORDER BY id DESC";
             //设置分页数据
             sql += " LIMIT " + page.Page * page.Size + "," + page.Size;
