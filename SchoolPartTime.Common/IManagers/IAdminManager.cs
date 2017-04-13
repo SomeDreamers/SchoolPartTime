@@ -26,5 +26,12 @@ namespace SchoolPartTime.Common.IManagers
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ReturnResult> DeleteUserAsync(long id);
+
+        /// <summary>
+        /// 根据ID删除兼职
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<ReturnResult> DeleteJobAsync(long id);
     }
 }

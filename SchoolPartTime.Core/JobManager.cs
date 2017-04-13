@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using SchoolPartTime.Common;
 using Microsoft.EntityFrameworkCore;
 using SchoolPartTime.Common.ViewModels;
+using SchoolPartTime.Common.QueryModels;
+using SchoolPartTime.Common.Enums;
 
 namespace SchoolPartTime.Core
 {
@@ -30,6 +32,7 @@ namespace SchoolPartTime.Core
             var time = DateTime.Now;
             job.UpdateTime = time;
             job.BusinessId = bussinessId;
+            job.Status = (int)JobStatus.Underway;
             context.Job.Add(job);
             await context.SaveChangesAsync();
         }
@@ -121,11 +124,11 @@ namespace SchoolPartTime.Core
                 model.ReplyCount = await context.Message.Where(a =>a.ReplyId==list[i].Id).CountAsync();
                 messageList.Add(model);
             }
-            JobModel jobModel = new JobModel(page.Page,page.Size,count,job);
+            JobModel jobModel = new JobModel(job);
             jobModel.BusinessName = name;
             jobModel.BusinessAddress = address;
             jobModel.Tell = tell;
-            jobModel.ListMessage = messageList;
+            jobModel.MessageListView = new MessageListView(page.Page, page.Size, count, messageList);
             return jobModel;
         }
         /// <summary>
@@ -176,6 +179,48 @@ namespace SchoolPartTime.Core
             sql += " LIMIT " + page.Page * page.Size + "," + page.Size;
             List<Job> jobs = await context.Job.FromSql(sql).ToListAsync();
             return new JobListView(page.Page, page.Size, count, jobs);
+        }
+
+        /// <summary>
+        /// 获取兼职列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<JobListView> GetJobListAsync(JobQuery query)
+        {
+            string sql = @"SELECT * FROM job WHERE 1 = 1";
+            //状态
+            if (query.Status == (int)JobStatus.Underway || query.Status == (int)JobStatus.Finished)
+                sql += " AND status = " + query.Status;
+            //标题
+            if (!string.IsNullOrEmpty(query.Title))
+                sql += " AND title like '%" + query.Title + "%'";
+            //薪资
+            if (query.Salary > 0)
+                sql += " AND salary > " + query.Salary;
+            //性别
+            if (query.SexAsk > 0)
+                sql += " AND sexAsk = " + query.SexAsk;
+            //查询总数量
+            int count = await context.User.FromSql(sql).CountAsync();
+            //设置排序
+            sql += " ORDER BY id DESC";
+            //设置分页数据
+            sql += " LIMIT " + query.Page * query.Size + "," + query.Size;
+            List<Job> jobs = await context.Job.FromSql(sql).ToListAsync();
+            //获取兼职额外信息
+            List<JobModel> models = new List<JobModel>();
+            foreach (var item in jobs)
+            {
+                //获取商家信息
+                var business = await context.Business.SingleAsync(b => b.Id == item.BusinessId);
+                JobModel model = new JobModel(item);
+                model.BusinessName = business.Name;
+                model.BusinessAddress = business.Address;
+                model.Tell = (await context.User.SingleAsync(a => a.Id == item.UserId)).Tell;
+                models.Add(model);
+            }
+            return new JobListView(query.Page, query.Size, count, models);
         }
     }
 }

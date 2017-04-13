@@ -58,11 +58,8 @@
                             {
                                 <li><a href="/Admin/AddAdmin">增加管理员</a></li>
                             }
+                            <li><a href="/Account/ToEditPassword">修改密码</a></li>
                             <li><a href="/Account/Logout">退出</a></li>
-                            @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
-                            {
-                                <li><a href="/Account/ToEditPassword">修改密码</a></li>
-                            }
                         </ul>
                     </li>
                 </ul>
@@ -102,6 +99,6 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
-    @RenderSection("Scripts", required: false)
+    @RenderSection("scripts", required: false)
 </body>
 </html>

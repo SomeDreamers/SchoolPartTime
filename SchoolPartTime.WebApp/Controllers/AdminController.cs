@@ -17,10 +17,12 @@ namespace SchoolPartTime.WebApp.Controllers
     {
         private readonly IAdminManager adminManager;
         private readonly IAccountManager accountManager;
-        public AdminController(IAdminManager adminManager, IAccountManager accountManager)
+        private readonly IJobManager jobManager;
+        public AdminController(IAdminManager adminManager, IAccountManager accountManager, IJobManager jobManager)
         {
             this.adminManager = adminManager;
             this.accountManager = accountManager;
+            this.jobManager = jobManager;
         }
 
         /// <summary>
@@ -42,6 +44,17 @@ namespace SchoolPartTime.WebApp.Controllers
         public async Task<IActionResult> DeleteUser(long id)
         {
             ReturnResult result = await adminManager.DeleteUserAsync(id);
+            return Json(result);
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> DeleteJob(long id)
+        {
+            ReturnResult result = await adminManager.DeleteJobAsync(id);
             return Json(result);
         }
 
@@ -69,6 +82,15 @@ namespace SchoolPartTime.WebApp.Controllers
             //存储管理员信息
             await accountManager.RegisterAsync(userModel);
             return RedirectToAction("UserList", new { Role = userModel.Role });
+        }
+
+        /// <summary>
+        /// 兼职管理页面
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> JobList(JobQuery query)
+        {
+            return View(await jobManager.GetJobListAsync(query));
         }
     }
 }

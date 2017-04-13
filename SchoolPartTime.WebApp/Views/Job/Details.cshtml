@@ -104,13 +104,13 @@
         <h2 align="" class="text-danger" style="font:bold">留言区</h2>
         <div>
             <div style="background:#C0C0C0;color:#C0C0C0;height:5px"></div>
-            <h4 class="	glyphicon glyphicon-pencil"> 留言(@Model.ListMessage.Count)</h4>
+            <h4 class="	glyphicon glyphicon-pencil"> 留言(@Model.MessageListView.ListMessage.Count)</h4>
             <button style="float:right;margin-top:20px;margin-bottom:20px" class="btn btn-success" id="message-btn">发表留言</button>
             <span><textarea class="form-control" id="message"></textarea> </span>
         </div>
-        @for (var i = 0; i < @Model.ListMessage.Count; i++)
+        @for (var i = 0; i < @Model.MessageListView.ListMessage.Count; i++)
         {
-            var message = Model.ListMessage[i];
+            var message = Model.MessageListView.ListMessage[i];
             <div>
                 <div class="well well-sm" style="margin-top:30px;">
                     <h4>
@@ -131,13 +131,11 @@
                     </div>
                 </div>
             </div>
-
-
         }
         <div>
             <ul class="pagination" id="pagination"></ul>
-            @Html.Hidden("Page", Model.Page)
-            @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
+            @Html.Hidden("Page", Model.MessageListView.Page)
+            @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
         </div>
     </div>
 }

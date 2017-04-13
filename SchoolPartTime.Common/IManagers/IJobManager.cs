@@ -1,4 +1,5 @@
 ﻿using SchoolPartTime.Common.Models;
+using SchoolPartTime.Common.QueryModels;
 using SchoolPartTime.Common.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -64,6 +65,13 @@ namespace SchoolPartTime.Common.IManagers
         /// <param name="jobId"></param>
         /// <returns></returns>
         Task<JobListView> OverList(long jobId, QueryPage page);
+
+        /// <summary>
+        /// 获取兼职列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<JobListView> GetJobListAsync(JobQuery query);
 
     }
 }

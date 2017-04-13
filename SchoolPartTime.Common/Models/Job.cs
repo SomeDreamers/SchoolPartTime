@@ -51,7 +51,7 @@ namespace SchoolPartTime.Common.Models
         /// 兼职薪资
         /// </summary>
         [Required(ErrorMessage = "薪资不能为空")]
-        public double Salary { get; set; }
+        public decimal Salary { get; set; }
 
         /// <summary>
         /// 商家ID

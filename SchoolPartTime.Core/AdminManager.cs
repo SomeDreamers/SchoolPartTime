@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SchoolPartTime.Common;
+using SchoolPartTime.Common.Enums;
 using SchoolPartTime.Common.IManagers;
 using SchoolPartTime.Common.Models;
 using SchoolPartTime.Common.QueryModels;
@@ -61,6 +62,21 @@ namespace SchoolPartTime.Core
         {
             ReturnResult result = new ReturnResult();
             context.User.Remove(new User { Id = id });
+            await context.SaveChangesAsync();
+            return result;
+        }
+        #endregion
+
+        #region 兼职管理
+        /// <summary>
+        /// 根据ID删除兼职
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> DeleteJobAsync(long id)
+        {
+            ReturnResult result = new ReturnResult();
+            context.Job.Remove(new Job { Id = id });
             await context.SaveChangesAsync();
             return result;
         }
