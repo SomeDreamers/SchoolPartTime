@@ -1,0 +1,21 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model UserModel
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4>
+            <span>个人信息详情</span>
+            <span style="float:right"><a class="btn btn-danger" asp-action="BusinessEdit" asp-controller="Account">编辑</a></span>
+        </h4>
+    </div>
+    <table class="table">
+        <tr><td><b>用户名</b></td><td>@Model.Name</td></tr>
+        <tr><td><b>联系电话</b></td><td>@Model.Tell</td></tr>
+        <tr><td><b>商家名称</b></td><td>@Model.BusinessName</td></tr>
+        <tr><td><b>商家介绍</b></td><td>@Model.Description</td></tr>
+        <tr><td><b>商家地址</b></td><td>@Model.Address</td></tr>
+    </table>
+</div>

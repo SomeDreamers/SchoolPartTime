@@ -70,5 +70,69 @@ namespace SchoolPartTime.Core
             }
             await context.SaveChangesAsync();
         }
+
+        /// <summary>
+        /// 获取商家用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<UserModel> BusinessUser(long id)
+        {
+            User user = await context.User.SingleAsync(a=>a.Id==id);
+            Business business = await context.Business.SingleAsync(b=>b.UserId==id);
+            UserModel model = new UserModel(user);
+            model.BusinessName = business.Name;
+            model.Address = business.Address;
+            model.Description = business.Description;
+            return model;
+        }
+
+        /// <summary>
+        /// 保存修改商家信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task SaveBusinessEdit(long id,UserModel model)
+        {
+            User user = await context.User.SingleAsync(b=>b.Id==id);
+            Business business = await context.Business.SingleAsync(c=>c.UserId==id);
+            user.Name = model.Name;
+            user.Tell = model.Tell;
+            business.Name = model.BusinessName;
+            business.Description = model.Description;
+            business.Address = model.Address;
+            context.User.Update(user);
+            await context.SaveChangesAsync();
+            context.Business.Update(business);
+            await context.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<ReturnResult> EditPassword(long id,PasswoModel model)
+        {
+            ReturnResult result = new ReturnResult();
+            User user = await context.User.SingleAsync(b=>b.Id==id);
+            string password = user.Password;
+            //user.Password = model.NewPassword;
+            //context.User.Update(user);
+            //await context.SaveChangesAsync();
+            if (password.Equals(model.OldPassword))
+            {
+                user.Password = model.NewPassword;
+                context.User.Update(user);
+                await context.SaveChangesAsync();
+                result.Message = "修改成功";
+            }
+            else
+            {
+                result.IsSuccess = false;
+                result.Message = "密码输入错误！";
+            }
+            return result;
+        }
     }
 }

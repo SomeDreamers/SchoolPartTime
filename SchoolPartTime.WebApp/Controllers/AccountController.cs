@@ -128,5 +128,85 @@ namespace SchoolPartTime.WebApp.Controllers
             User user = await accountManager.GetUserByNameAsync(Name);
             return user == null;
         }
+
+        /// <summary>
+        /// MD5加密
+        /// </summary>
+        /// <param name="myString"></param>
+        /// <returns></returns>
+        public static string GetMD5(string myString)
+        {
+            string pwd = "";
+            MD5 md5 = MD5.Create(); //实例化一个md5对像
+            // 加密后是一个字节类型的数组，这里要注意编码UTF8/Unicode等的选择　
+            byte[] s = md5.ComputeHash(Encoding.UTF8.GetBytes(myString));
+            // 通过使用循环，将字节类型的数组转换为字符串，此字符串是常规字符格式化所得
+            for (int i = 0; i < s.Length; i++)
+            {
+                // 将得到的字符串使用十六进制类型格式。格式后的字符是小写的字母，如果使用大写（X）则格式后的字符是大写字符 
+                pwd = pwd + s[i].ToString("X");
+            }
+            return pwd;
+        }
+
+        /// <summary>
+        /// 商家用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> BusinessUser()
+        {
+            var id = HttpContext.User.Identity.Uid();
+            UserModel model = await accountManager.BusinessUser(id);
+            return View("BusinessUser",model);
+        }
+
+        /// <summary>
+        /// 编辑商家信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> BusinessEdit()
+        {
+            var id = HttpContext.User.Identity.Uid();
+            UserModel model = await accountManager.BusinessUser(id);
+            return View("BusinessEdit", model);
+        }
+
+        /// <summary>
+        /// 报存商家信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> SaveBusinessEdit(UserModel model)
+        {
+            long id = HttpContext.User.Identity.Uid();
+            await accountManager.SaveBusinessEdit(id,model);
+            return RedirectToAction("BusinessUser");
+        }
+
+        /// <summary>
+        /// 显示修改密码页面
+        /// </summary>
+        /// <returns></returns>
+        public IActionResult ToEditPassword()
+        {
+            return View("EditPassword");
+        }
+
+        /// <summary>
+        /// 修改密码
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> EditPassword(string oldPassword,string newPassword)
+        {
+            string oldPW = GetMD5(oldPassword);
+            string newPw = GetMD5(newPassword);
+            PasswoModel model = new PasswoModel();
+            model.NewPassword = newPw;
+            model.OldPassword = oldPW;
+            long id = HttpContext.User.Identity.Uid();
+            ReturnResult result = await accountManager.EditPassword(id,model);
+            return Json(result);
+        }
     }
 }

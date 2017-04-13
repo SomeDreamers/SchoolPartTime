@@ -1,0 +1,61 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model ReplyModel
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+             $(".reply-btn").click(function () {
+                $(this).parent().parent().find(".reply-text").show();
+            });
+            $(".cancel").on("click", function () {
+                $(this).parent().parent().hide();
+            })
+            $(".sure").on("click", function () {
+                var messageId = $(this).parent().parent().find(".reply").attr("data");
+                var message = $(this).parent().parent().find(".reply").val();
+                $.post("/Message/SaveReply", { messageId: messageId, message: message, jobId:@Model.Id}, function (result) {
+                    if (result.isSuccess) {
+                        window.location.reload();
+                    } else {
+                        alert(result.Message);
+
+                    }
+                });
+            });
+        });
+
+    </script>
+}
+<div class="well well-sm" style="margin-top:30px;">
+    <h4>
+        <span style="color:#7B7B7B;">&nbsp&nbsp @Model.WriterName</span>
+        <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@Model.Time)</span>
+        <span style="float:right;margin-left:20px"><a href="/Job/Details?id=@Model.JobId" class="btn btn-primary btn-sm">返回</a></span>
+        <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
+    </h4>
+    <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @Model.Content</p>
+    <div style="display:none " class="reply-text">
+        <input style=" width: 60%;margin-left:330px" type="text" data=@Model.Id class="reply" />
+        <span><button class="btn btn-primary sure">确认</button></span>
+        <span><button class="btn btn-primary cancel">取消</button></span>
+    </div>
+</div>
+<div>
+    <h5>回复: @Model.ReplyList.Count 条</h5>
+    @for (var i = 0; i < Model.ReplyList.Count; i++)
+    {
+        var reply = Model.ReplyList[i];
+        <hr/>
+        <h4>
+            <span>#@(i+1)</span>
+            <span style="color:#7B7B7B;">&nbsp&nbsp @reply.WriterName</span>
+            <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@reply.Time)</span>
+        </h4>
+        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @reply.Content</p>
+        <hr/>
+    }
+</div>
+

@@ -47,6 +47,7 @@ namespace SchoolPartTime.WebApp.Controllers
         /// <returns></returns>
         public async Task<IActionResult> JobList(QueryPage page)
         {
+            await jobManager.JudgeStatus();
             var id = HttpContext.User.Identity.Uid();
             var jobList =await jobManager.JobList(page,id);
             return View("JobList", jobList);
@@ -92,10 +93,35 @@ namespace SchoolPartTime.WebApp.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<IActionResult> Details(long id)
+        public async Task<IActionResult> Details(long id,QueryPage page)
         {
-            JobModel jobModel = await jobManager.Details(id);
+            JobModel jobModel = await jobManager.Details(id,page);
             return View("Details", jobModel);
         }
+        /// <summary>
+        /// 将兼职移至完结
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> Over(long id)
+        {
+            await jobManager.MoveJob(id);
+            ReturnResult result = new ReturnResult();
+            result.Message = "操作失败";
+            return Json(result);
+        }
+        /// <summary>
+        /// 兼职完结列表
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> OverList(QueryPage page)
+        {
+            await jobManager.JudgeStatus();
+            var id = HttpContext.User.Identity.Uid();
+            var jobList = await jobManager.OverList(id,page);
+            return View("JobList", jobList);
+        }
+
     }
 }
