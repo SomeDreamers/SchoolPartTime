@@ -92,5 +92,7 @@ namespace SchoolPartTime.WebApp.Controllers
         {
             return View(await jobManager.GetJobListAsync(query));
         }
+
+
     }
 }

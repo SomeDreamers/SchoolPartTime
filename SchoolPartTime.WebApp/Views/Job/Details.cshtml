@@ -1,15 +1,9 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-//Layout = "_NoFootLayout";
-}
-@model JobModel
+﻿@model JobModel
 @section scripts{
     <script type="text/javascript">
         $(function () {
             $.jqPaginator('#pagination', {
-                totalPages: parseInt($("#PageCount").val()),
+                totalPages: parseInt($("#PageCount").val()) == 0 ? 1 : parseInt($("#PageCount").val()),
                 visiblePages: 5,  //设置最多显示的页码数
                 currentPage: parseInt($("#Page").val()) + 1,
                 first: '<li class="first"><a href="javascript:;">首页</a></li>',
@@ -99,7 +93,7 @@
         </div>
     </div>
    
-@if (Model.Status == 0) { 
+@if (Model.Status == (int)JobStatus.Underway) { 
     <div>
         <h2 align="" class="text-danger" style="font:bold">留言区</h2>
         <div>

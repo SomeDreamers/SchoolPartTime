@@ -102,13 +102,13 @@
                     <th scope="row">@(Model.Page * Model.Size + i + 1)</th>
                     <td>@item.Title</td>
                     <td>@item.Content</td>
-                    <td>@(item.StartTime.ToString("yyyy-MM-dd : hh-MM-ss") + "——" + item.EndTime.ToString("yyyy-MM-dd : hh-MM-ss"))</td>
+                    <td>@(item.StartTime.ToString("yyyy-MM-dd") + "—" + item.EndTime.ToString("yyyy-MM-dd"))</td>
                     <td>@item.Salary</td>
                     <td>@(((JobStatus)item.Status).GetDescription())</td>
                     <td>@(item.BusinessName + "("+item.Tell+")")</td>
                     <td>@item.AgeAsk</td>
                     <td>@item.SexAsk</td>
-                    <td>@item.StartTime.ToString("yyyy-MM-dd : hh-MM-ss")</td>
+                    <td>@item.StartTime.ToString("yyyy-MM-dd")</td>
                     <td>
                         <a href="javascript:void(0)" class="del-btn" data-id="@item.Id">删除</a>
                     </td>

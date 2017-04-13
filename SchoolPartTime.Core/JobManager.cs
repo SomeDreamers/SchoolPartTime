@@ -27,7 +27,7 @@ namespace SchoolPartTime.Core
         /// <returns></returns>
         public async Task CreateAsync(Job job)
         {
-            var bussiness = await context.Business.FirstOrDefaultAsync(b=>b.UserId==job.UserId);
+            var bussiness = await context.Business.FirstOrDefaultAsync(b => b.UserId == job.UserId);
             var bussinessId = bussiness.Id;
             var time = DateTime.Now;
             job.UpdateTime = time;
@@ -42,18 +42,18 @@ namespace SchoolPartTime.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<JobListView> JobList(QueryPage page,long id)
+        public async Task<JobListView> JobList(QueryPage page, long id)
         {
             //查询总数
-            var count = await context.Job.Where(b => b.UserId == id && b.Status==0).CountAsync();
-            string sql = @"SELECT * FROM Job WHERE userId ="+id;
+            var count = await context.Job.Where(b => b.UserId == id && b.Status == (int)JobStatus.Underway).CountAsync();
+            string sql = @"SELECT * FROM Job WHERE userId =" + id;
             //设置排序
-            sql += " AND Status=0";
+            sql += " AND Status = " + (int)JobStatus.Underway;
             sql += " ORDER BY id DESC";
             //设置分页数据
             sql += " LIMIT " + page.Page * page.Size + "," + page.Size;
             List<Job> jobs = await context.Job.FromSql(sql).ToListAsync();
-            return new JobListView(page.Page, page.Size, count,jobs);
+            return new JobListView(page.Page, page.Size, count, jobs);
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SchoolPartTime.Core
         /// <returns></returns>
         public async Task<Job> FindById(long id)
         {
-            var job =await context.Job.FirstOrDefaultAsync(c=>c.Id==id);
+            var job = await context.Job.FirstOrDefaultAsync(c => c.Id == id);
             return job;
         }
 
@@ -100,10 +100,10 @@ namespace SchoolPartTime.Core
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<JobModel> Details(long id,QueryPage page)
+        public async Task<JobModel> Details(long id, QueryPage page)
         {
             //int test = 0;
-            Job job =await context.Job.SingleAsync(c => c.Id == id);
+            Job job = await context.Job.SingleAsync(c => c.Id == id);
             var business = await context.Business.SingleAsync(b => b.Id == job.BusinessId);
             var name = business.Name;
             var address = business.Address;
@@ -111,7 +111,7 @@ namespace SchoolPartTime.Core
             var count = await context.Message.Where(b => b.JobId == id && b.ReplyId == 0).CountAsync();
             string sql = @"SELECT * FROM Message WHERE ReplyId=0";
             //设置排序
-            sql += " AND JobId ="+id;
+            sql += " AND JobId =" + id;
             sql += " ORDER BY id DESC";
             //设置分页数据
             sql += " LIMIT " + page.Page * page.Size + "," + page.Size;
@@ -121,7 +121,7 @@ namespace SchoolPartTime.Core
             for (int i = 0; i < list.Count; i++)
             {
                 MessageModel model = new MessageModel(list[i]);
-                model.ReplyCount = await context.Message.Where(a =>a.ReplyId==list[i].Id).CountAsync();
+                model.ReplyCount = await context.Message.Where(a => a.ReplyId == list[i].Id).CountAsync();
                 messageList.Add(model);
             }
             JobModel jobModel = new JobModel(job);
@@ -137,8 +137,8 @@ namespace SchoolPartTime.Core
         /// <returns></returns>
         public async Task JudgeStatus()
         {
-            List<Job> jobs = await context.Job.ToListAsync(); 
-            for(int i = 0; i < jobs.Count; i++)
+            List<Job> jobs = await context.Job.ToListAsync();
+            for (int i = 0; i < jobs.Count; i++)
             {
                 Job job = jobs[i];
                 DateTime time = DateTime.Now;
@@ -156,7 +156,7 @@ namespace SchoolPartTime.Core
         /// <returns></returns>
         public async Task MoveJob(long jobId)
         {
-            Job job = await context.Job.SingleAsync(b=>b.Id==jobId);
+            Job job = await context.Job.SingleAsync(b => b.Id == jobId);
             job.Status = 1;
             context.Job.Update(job);
             await context.SaveChangesAsync();
