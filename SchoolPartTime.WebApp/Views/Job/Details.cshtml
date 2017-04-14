@@ -83,11 +83,23 @@
                     <span style="float:right"><a href="/Job/AllJob" class="btn btn-primary">返回</a></span>
 
                 }
+                else
+                {
+                    <span style="float:right"><a href="/Admin/JobList" class="btn btn-primary">返回</a></span>
+                }
 
             }
             else
             {
-                <span style="float:right"><a href="/Job/OverList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+                @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.System.GetDescription())
+                {
+                    <span style="float:right"><a href="/Admin/JobList" class="btn btn-primary">返回</a></span>
+
+                }
+                else
+                {
+                    <span style="float:right"><a href="/Job/OverList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+                }
 
             }
         </h4>
@@ -116,7 +128,7 @@
         </div>
     </div>
    
-@if (Model.Status == (int)JobStatus.Underway) { 
+@if (Model.Status == (int)JobStatus.Underway&& Html.ViewContext.HttpContext.User.Identity.Role() != RoleType.System.GetDescription()) {
     <div>
         <h2 align="" class="text-danger" style="font:bold">留言区</h2>
         <div>
@@ -133,8 +145,7 @@
                     <div class="well well-sm" style="margin-top:20px;margin-bottom: 0px;">
                         <h4>
                             <span>#@(i + 1)</span>
-                            @if (message.UserStatus == (int)RoleType.Business)
-                            {
+                            @if (message.UserStatus == (int)RoleType.Business) {
                                 <span style="color:#272727;font-weight:bold;">&nbsp&nbsp [商家]</span>
 
                             }
@@ -147,7 +158,7 @@
                             <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
                         </h4>
                         @if (message.UserStatus == (int)RoleType.Business)
-                        {
+                         {
                             <p style="color:#272727;font-weight:bold;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
 
                         }
@@ -156,9 +167,10 @@
                             <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
 
                         }
-                        
+
+
                         @if (@message.ReplyCount > 0)
-                        {
+{
                             <p><a href="/Message/Toreply?messageId=@message.Id">>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相关评论 @message.ReplyCount 条</a></p>
                         }
                         <div style="display:none " class="reply-text">
@@ -171,10 +183,11 @@
             }
         </div>
 </div>
-}
+
  <div>
     <ul class="pagination" id="pagination"></ul>
     @Html.Hidden("Page", Model.MessageListView.Page)
     @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
 </div>
+}
 
