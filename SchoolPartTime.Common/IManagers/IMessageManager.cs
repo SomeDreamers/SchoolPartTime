@@ -29,5 +29,13 @@ namespace SchoolPartTime.Common.IManagers
         /// <returns></returns>
         Task<ReplyModel> ToReply(long messageId);
 
+        /// <summary>
+        /// 加载留言列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        Task<MessageListView> MessageList(long id,QueryPage page);
+
     }
 }

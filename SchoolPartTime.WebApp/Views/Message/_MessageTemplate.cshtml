@@ -1,0 +1,49 @@
+﻿@{ 
+    Layout = "_NoLayout";
+}
+
+@model MessageListView
+
+@for (var i = 0; i < @Model.ListMessage.Count; i++)
+{
+    var message = Model.ListMessage[i];
+    <div>
+        <div class="well well-sm" style="margin-top:20px;margin-bottom: 0px;">
+            <h4>
+                <span>#@(Model.Page * Model.Size + i + 1)</span>
+                @if (message.UserStatus == (int)RoleType.Business)
+                {
+                    <span style="color:#272727;font-weight:bold;">&nbsp&nbsp [商家]</span>
+
+                }
+                else
+                {
+                    <span style="color:#7B7B7B;">&nbsp&nbsp @message.WriterName</span>
+
+                }
+                <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@message.Time)</span>
+                <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
+            </h4>
+            @if (message.UserStatus == (int)RoleType.Business)
+            {
+                <p style="color:#272727;font-weight:bold;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
+
+            }
+            else
+            {
+                <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
+
+            }
+            @if (@message.ReplyCount > 0)
+            {
+                <p><a href="/Message/Toreply?messageId=@message.Id">>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相关评论 @message.ReplyCount 条</a></p>
+            }
+            <div style="display:none " class="reply-text">
+                <input style=" width: 60%;margin-left:330px" type="text" data=@message.Id class="reply" />
+                <span><button class="btn btn-primary sure">确认</button></span>
+                <span><button class="btn btn-primary cancel">取消</button></span>
+            </div>
+        </div>
+    </div>
+}
+

@@ -121,6 +121,7 @@ namespace SchoolPartTime.Core
             for (int i = 0; i < list.Count; i++)
             {
                 MessageModel model = new MessageModel(list[i]);
+                model.UserStatus = (await context.User.SingleAsync(b => b.Id == list[i].WriterId)).Role;
                 model.ReplyCount = await context.Message.Where(a => a.ReplyId == list[i].Id).CountAsync();
                 messageList.Add(model);
             }
@@ -197,7 +198,7 @@ namespace SchoolPartTime.Core
                 sql += " AND title like '%" + query.Title + "%'";
             //薪资
             if (query.Salary > 0)
-                sql += " AND salary > " + query.Salary;
+                sql += " AND salary >= " + query.Salary;
             //性别
             if (query.SexAsk > 0)
                 sql += " AND sexAsk = " + query.SexAsk;

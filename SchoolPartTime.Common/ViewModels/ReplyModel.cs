@@ -45,7 +45,12 @@ namespace SchoolPartTime.Common.ViewModels
         /// <summary>
         /// 回复列表
         /// </summary>
-        public List<Message> ReplyList{ get; set; }
+        public List<MessageModel> ReplyList{ get; set; }
+
+        /// <summary>
+        /// 留言人角色
+        /// </summary>
+        public int UserStatus { get; set; }
 
         public ReplyModel()
         {

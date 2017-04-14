@@ -31,12 +31,28 @@
 }
 <div class="well well-sm" style="margin-top:30px;">
     <h4>
-        <span style="color:#7B7B7B;">&nbsp&nbsp @Model.WriterName</span>
+        @if (Model.UserStatus == (int)RoleType.Business)
+        {
+            <span style="color:#272727;font-weight:bold;">&nbsp&nbsp [商家]</span>
+
+        }
+        else
+        {
+            <span style="color:#7B7B7B;">&nbsp&nbsp @Model.WriterName</span>
+        }  
         <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@Model.Time)</span>
         <span style="float:right;margin-left:20px"><a href="/Job/Details?id=@Model.JobId" class="btn btn-primary btn-sm">返回</a></span>
         <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
     </h4>
-    <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @Model.Content</p>
+    @if (Model.UserStatus == (int)RoleType.Business)
+    {
+        <p style="color:#272727;font-weight:bold;">&nbsp&nbsp&nbsp @Model.Content</p>
+    }
+    else
+    {
+        <p>&nbsp&nbsp&nbsp @Model.Content</p>
+    }
+    
     <div style="display:none " class="reply-text">
         <input style=" width: 60%;margin-left:330px" type="text" data=@Model.Id class="reply" />
         <span><button class="btn btn-primary sure">确认</button></span>
@@ -51,10 +67,27 @@
         <hr/>
         <h4>
             <span>#@(i+1)</span>
-            <span style="color:#7B7B7B;">&nbsp&nbsp @reply.WriterName</span>
+            @if (reply.UserStatus == (int)RoleType.Business)
+            {
+                <span style="color:#272727;font-weight:bold;">&nbsp&nbsp [商家]</span>
+
+            }
+            else
+            {
+                <span style="color:#7B7B7B;">&nbsp&nbsp @reply.WriterName</span>
+            }
             <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@reply.Time)</span>
         </h4>
-        <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @reply.Content</p>
+        @if (reply.UserStatus == (int)RoleType.Business)
+        {
+            <p style="font-weight:bold;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @reply.Content</p>
+
+        }
+        else
+        {
+            <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @reply.Content</p>
+        }
+
         <hr/>
     }
 </div>

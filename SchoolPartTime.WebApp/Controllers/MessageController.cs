@@ -61,10 +61,29 @@ namespace SchoolPartTime.WebApp.Controllers
 
         }
 
+        /// <summary>
+        /// 回复列表
+        /// </summary>
+        /// <param name="messageId"></param>
+        /// <returns></returns>
         public async Task<IActionResult> ToReply(long messageId)
         {
             ReplyModel model = await messageManager.ToReply(messageId);
             return View("Reply",model);
+        }
+
+        /// <summary>
+        /// 加载留言列表
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tmp"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> MessageList(int page,long id)
+        {
+            QueryPage pageModel = new QueryPage();
+            pageModel.Page = page;
+            MessageListView model = await messageManager.MessageList(id,pageModel);
+            return PartialView("_MessageTemplate", model);
         }
     }
 }

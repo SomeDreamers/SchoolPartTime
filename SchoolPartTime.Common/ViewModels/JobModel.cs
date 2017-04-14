@@ -91,6 +91,11 @@ namespace SchoolPartTime.Common.ViewModels
         /// </summary>
         public MessageListView MessageListView { get; set; }
 
+        ///// <summary>
+        ///// 留言总数
+        ///// </summary>
+        //public int MessageCount { get; set; }
+
         /// <summary>
         /// 用户名
         /// </summary>

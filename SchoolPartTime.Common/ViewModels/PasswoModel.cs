@@ -10,13 +10,11 @@ namespace SchoolPartTime.Common.ViewModels
         /// <summary>
         /// 旧密码
         /// </summary>
-        [Required(ErrorMessage = "密码不能为空")]
         public string OldPassword { get; set; }
 
         /// <summary>
         /// 新密码
         /// </summary>
-        [Required(ErrorMessage = "新密码不能为空")]
         public string NewPassword { get; set; }
     }
 }

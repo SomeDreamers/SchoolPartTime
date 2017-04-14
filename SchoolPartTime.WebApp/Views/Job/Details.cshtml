@@ -19,7 +19,21 @@
             });
             function loadData(page) {
                 $("#Page").val(page - 1);
-                $("form").submit();
+                //$("form").submit();
+                $.ajax({
+                    url: "/Message/MessageList",
+                    type: "post",
+                    dataType: "html",
+                    data: {page:page-1,id:@Model.Id},
+                    success: function (data) {
+                        $("#messageList").html(data);
+
+                    },
+                    error: function () {
+                        alert("加载失败");
+
+                    }
+                });
             };
 
             $("#message-btn").click(function () {
@@ -33,13 +47,13 @@
                     }
                 });
             });
-            $(".reply-btn").click(function () {
+            $(document).on("click", ".reply-btn", function (event) {
                 $(this).parent().parent().find(".reply-text").show();
             });
-            $(".cancel").on("click", function () {
+            $(document).on("click", ".cancel", function (event) {
                 $(this).parent().parent().hide();
-            })
-            $(".sure").on("click", function () {
+            });
+            $(document).on("click", ".sure", function (event) {
                 var messageId = $(this).parent().parent().find(".reply").attr("data");
                 var message = $(this).parent().parent().find(".reply").val();
                 $.post("/Message/SaveReply", { messageId: messageId, message: message, jobId:@Model.Id}, function (result) { 
@@ -60,7 +74,16 @@
         <h4 style="margin-top:20px">
             @if (Model.Status == (int)JobStatus.Underway)
             {
-                <span style="float:right"><a href="/Job/JobList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+                @if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
+                {
+                    <span style="float:right"><a href="/Job/JobList?id=@Model.Id" class="btn btn-primary">返回</a></span>
+                }
+                else if (Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.User.GetDescription())
+                {
+                    <span style="float:right"><a href="/Job/AllJob" class="btn btn-primary">返回</a></span>
+
+                }
+
             }
             else
             {
@@ -98,42 +121,60 @@
         <h2 align="" class="text-danger" style="font:bold">留言区</h2>
         <div>
             <div style="background:#C0C0C0;color:#C0C0C0;height:5px"></div>
-            <h4 class="	glyphicon glyphicon-pencil"> 留言(@Model.MessageListView.ListMessage.Count)</h4>
+            <h4 class="	glyphicon glyphicon-pencil"> 留言(@Model.MessageListView.Total)</h4>
             <button style="float:right;margin-top:20px;margin-bottom:20px" class="btn btn-success" id="message-btn">发表留言</button>
             <span><textarea class="form-control" id="message"></textarea> </span>
         </div>
-        @for (var i = 0; i < @Model.MessageListView.ListMessage.Count; i++)
-        {
-            var message = Model.MessageListView.ListMessage[i];
-            <div>
-                <div class="well well-sm" style="margin-top:20px;margin-bottom: 0px;">
-                    <h4>
-                        <span>#@(i + 1)</span>
-                        <span style="color:#7B7B7B;">&nbsp&nbsp @message.WriterName</span>
-                        <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@message.Time)</span>
-                        <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
-                    </h4>
-                    <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
-                    @if (@message.ReplyCount > 0)
-                {
-                        <p><a href="/Message/Toreply?messageId=@message.Id">>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相关评论 @message.ReplyCount 条</a></p>
-                    }
-                    <div style="display:none " class="reply-text">
-                        <input style=" width: 60%;margin-left:330px" type="text" data=@message.Id class="reply" />
-                        <span><button class="btn btn-primary sure">确认</button></span>
-                        <span><button class="btn btn-primary cancel">取消</button></span>
+        <div id="messageList">
+            @for (var i = 0; i < @Model.MessageListView.ListMessage.Count; i++)
+            {
+                var message = Model.MessageListView.ListMessage[i];
+                <div>
+                    <div class="well well-sm" style="margin-top:20px;margin-bottom: 0px;">
+                        <h4>
+                            <span>#@(i + 1)</span>
+                            @if (message.UserStatus == (int)RoleType.Business)
+                            {
+                                <span style="color:#272727;font-weight:bold;">&nbsp&nbsp [商家]</span>
+
+                            }
+                            else
+                            {
+                                <span style="color:#7B7B7B;">&nbsp&nbsp @message.WriterName</span>
+
+                            }
+                            <span style="color:#5B5B5B;font-size:13px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp(发表于:@message.Time)</span>
+                            <span style="float:right" class="reply-btn"><a class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-comment"></span>&nbsp&nbsp回复</a></span>
+                        </h4>
+                        @if (message.UserStatus == (int)RoleType.Business)
+                        {
+                            <p style="color:#272727;font-weight:bold;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
+
+                        }
+                        else
+                        {
+                            <p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp @message.Content</p>
+
+                        }
+                        
+                        @if (@message.ReplyCount > 0)
+                        {
+                            <p><a href="/Message/Toreply?messageId=@message.Id">>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp相关评论 @message.ReplyCount 条</a></p>
+                        }
+                        <div style="display:none " class="reply-text">
+                            <input style=" width: 60%;margin-left:330px" type="text" data=@message.Id class="reply" />
+                            <span><button class="btn btn-primary sure">确认</button></span>
+                            <span><button class="btn btn-primary cancel">取消</button></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
 </div>
 }
-<form>
-    @Html.Hidden("id", Model.Id)
-    <div>
-        <ul class="pagination" id="pagination"></ul>
-        @Html.Hidden("Page", Model.MessageListView.Page)
-        @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
-    </div>
-</form>
+ <div>
+    <ul class="pagination" id="pagination"></ul>
+    @Html.Hidden("Page", Model.MessageListView.Page)
+    @Html.Hidden("PageCount", Model.MessageListView.Total % Model.MessageListView.Size > 0 ? (Model.MessageListView.Total / Model.MessageListView.Size) + 1 : (Model.MessageListView.Total / Model.MessageListView.Size))
+</div>
 

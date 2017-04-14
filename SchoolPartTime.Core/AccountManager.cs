@@ -134,5 +134,29 @@ namespace SchoolPartTime.Core
             }
             return result;
         }
+        /// <summary>
+        /// 获取学生用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<User> StudentUser(long id)
+        {
+            User user = await context.User.SingleAsync(c => c.Id == id);
+            return user;
+        }
+
+        /// <summary>
+        /// 更新学生用户信息
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task UpdateStudent(User user)
+        {
+            User model = await context.User.SingleAsync(c => c.Id == user.Id);
+            model.Name = user.Name;
+            model.Tell = user.Tell;
+            context.User.Update(model);
+            await context.SaveChangesAsync();
+        }
     }
 }

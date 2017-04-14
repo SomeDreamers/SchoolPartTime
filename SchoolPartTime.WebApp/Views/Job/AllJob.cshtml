@@ -1,0 +1,111 @@
+﻿@{
+    ViewData["Title"] = "全部兼职";
+}
+
+@model JobListView
+
+@section styles{
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            //分页设置
+            $.jqPaginator('#pagination', {
+                totalPages: parseInt($("#PageCount").val()),
+                visiblePages: 5,  //设置最多显示的页码数
+                currentPage: parseInt($("#Page").val()) + 1,
+                first: '<li class="first"><a href="javascript:;">首页</a></li>',
+                prev: '<li class="prev"><a href="javascript:;"><i class="arrow arrow2"></i>上一页</a></li>',
+                next: '<li class="next"><a href="javascript:;">下一页<i class="arrow arrow3"></i></a></li>',
+                last: '<li class="last"><a href="javascript:;">末页</a></li>',
+                page: '<li class="page"><a href="javascript:;">{{page}}</a></li>',
+                onPageChange: function (page, type) {
+                    if (type == "change") {
+                        loadData(page);
+                    }
+                }
+            });
+            function loadData(page) {
+                $("#Page").val(page - 1);
+                $("form").submit();
+            };
+
+            //删除按钮点击事件
+            $(".del-btn").click(function () {
+                var id = $(this).data("id");
+                var r = confirm("确定删除该兼职？")
+                if (r == true) {
+                    $.post("/Admin/DeleteJob", { id: id }, function (result) {
+                        if (result.isSuccess) {
+                            window.location.reload();
+                        } else {
+                            alert(result.message);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+<h2><span class="glyphicon glyphicon-leaf"></span>@ViewData["Title"]</h2>
+<form>
+    <div class="well well-sm">
+        <div class="zlz-search-bar">
+            <span class="glyphicon glyphicon-search"></span>
+            <div class="zlz-search-item">
+                @Html.Label("Title", "标题:", new { @class = "control-label" })
+                @Html.TextBox("Title", "", htmlAttributes: new { @class = "form-control" })
+            </div>
+            <div class="zlz-search-item">
+                @Html.Label("Salary", "时薪(小时):", new { @class = "control-label" })
+                @Html.TextBox("Salary", "", htmlAttributes: new { @class = "form-control", type = "number" })
+            </div>
+            <div class="zlz-search-item">
+                @Html.Label("SexAsk", "性别要求:", new { @class = "control-label" })
+                @Html.DropDownList("SexAsk", SexTypeHelper.GetItems(showNull: true), new { @class = "form-control" })
+            </div>
+            <div class="zlz-search-btn form-group">
+                <input type="submit" value="搜索" class="btn btn-default btn-primary" />
+            </div>
+        </div>
+    </div>
+
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>标题</th>
+                <th>时薪(元)</th>
+                <th>招聘商家</th>
+                <th>地址</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.JobModels.Count; i++)
+            {
+                var item = Model.JobModels[i];
+                <tr>
+                    <th scope="row">@(Model.Page * Model.Size + i + 1)</th>
+                    <td>@item.Title</td>
+                    <td>@item.Salary</td>
+                    <td>@item.BusinessName</td>
+                    <td>@item.BusinessAddress</td>
+                    <td>
+                        <a href="/Job/Details?id=@item.Id">详情</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <ul class="pagination" id="pagination"></ul>
+        @Html.Hidden("Page", Model.Page)
+        @Html.Hidden("PageCount", Model.Total % Model.Size > 0 ? (Model.Total / Model.Size) + 1 : (Model.Total / Model.Size))
+    </div>
+
+</form>

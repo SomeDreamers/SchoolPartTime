@@ -48,7 +48,13 @@
                         <li><a asp-area="" asp-controller="Job" asp-action="OverList">完结的兼职</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="BusinessUser">个人信息</a></li>
                     }
-                    
+                    else
+                    {
+                        <li><a asp-area="" asp-controller="Job" asp-action="AllJob">查看招聘</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="StudentUser">个人信息</a></li>
+
+                    }
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">

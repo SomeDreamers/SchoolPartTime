@@ -188,5 +188,38 @@ namespace SchoolPartTime.WebApp.Controllers
             ReturnResult result = await accountManager.EditPassword(id,model);
             return Json(result);
         }
+        /// <summary>
+        /// 获取学生用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Studentuser()
+        {
+            long id = HttpContext.User.Identity.Uid();
+            User user = await accountManager.StudentUser(id);
+            return View("StudentUser" ,user);
+        }
+
+        /// <summary>
+        /// 编辑学生用户信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> StudentEdit()
+        {
+            long id = HttpContext.User.Identity.Uid();
+            User user = await accountManager.StudentUser(id);
+            return View("StudentEdit",user);
+
+        }
+
+        /// <summary>
+        /// 更新学生用户信息
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<IActionResult> SaveStudentEdit(User user)
+        {
+            await accountManager.UpdateStudent(user);
+            return RedirectToAction("StudentUser");
+        }
     }
 }

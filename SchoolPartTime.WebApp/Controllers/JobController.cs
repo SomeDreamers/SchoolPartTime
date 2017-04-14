@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using SchoolPartTime.WebApp.Helpers;
 using SchoolPartTime.Common;
 using SchoolPartTime.Common.ViewModels;
+using SchoolPartTime.Common.QueryModels;
+using SchoolPartTime.Common.Enums;
 
 namespace SchoolPartTime.WebApp.Controllers
 {
@@ -99,12 +101,6 @@ namespace SchoolPartTime.WebApp.Controllers
             return View("Details", jobModel);
         }
 
-        public async Task<IActionResult> MessageList(long id, QueryPage tmp)
-        {
-            List<MessageModel> models = new List<MessageModel>();
-            return PartialView("_MessageTemplate", models);
-        }
-
         /// <summary>
         /// 将兼职移至完结
         /// </summary>
@@ -128,6 +124,17 @@ namespace SchoolPartTime.WebApp.Controllers
             var id = HttpContext.User.Identity.Uid();
             var jobList = await jobManager.OverList(id,page);
             return View("JobList", jobList);
+        }
+
+        /// <summary>
+        /// 查看全部兼职
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> AllJob(JobQuery query)
+        {
+            query.Status = (int)JobStatus.Underway;
+            JobListView result = await jobManager.GetJobListAsync(query);
+            return View("AllJob",result);
         }
 
     }

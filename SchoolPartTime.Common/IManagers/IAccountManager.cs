@@ -47,10 +47,24 @@ namespace SchoolPartTime.Common.IManagers
         Task SaveBusinessEdit(long id,UserModel model);
 
         /// <summary>
-        /// 修改密骂
+        /// 修改密码
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         Task<ReturnResult> EditPassword(long id,PasswoModel model);
+
+        /// <summary>
+        /// 获取学生用户信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<User> StudentUser(long id);
+
+        /// <summary>
+        ///更新学生信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task UpdateStudent(User user);
     }
 }
