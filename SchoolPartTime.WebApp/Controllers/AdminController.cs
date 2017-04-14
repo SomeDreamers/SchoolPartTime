@@ -93,6 +93,13 @@ namespace SchoolPartTime.WebApp.Controllers
             return View(await jobManager.GetJobListAsync(query));
         }
 
-
+        /// <summary>
+        /// 统计界面
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IActionResult> Statistics()
+        {
+            return View(await adminManager.GetStaticticsModelAsync());
+        }
     }
 }
