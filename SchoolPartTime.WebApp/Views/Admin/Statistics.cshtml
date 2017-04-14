@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "数据统计";
+}
+
+@model StaticticsModel
+
+<h2><span class="glyphicon glyphicon-list-alt"></span>@ViewData["Title"]</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>统计类型</th>
+            <th>各类型统计数据</th>
+            <th>总统计数据</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th rowspan="3">用户统计</th>
+            <td>管理员：@Model.UserStatistics.SysUserCount</td>
+            <td rowspan="3">总用户：@Model.UserStatistics.TotalUserCount</td>
+        </tr>
+        <tr>
+            <td>管理员：@Model.UserStatistics.SysUserCount</td>
+        </tr>
+        <tr>
+            <td>管理员：@Model.UserStatistics.SysUserCount</td>
+        </tr>
+        <tr>
+            <th rowspan="2">兼职统计</th>
+            <td>进行中：@Model.JobStatistics.UnderwayJobCount</td>
+            <td rowspan="2">总兼职：@Model.JobStatistics.TotalJobCount</td>
+        </tr>
+        <tr>
+            <td>已结束：@Model.JobStatistics.FinishJobCount</td>
+        </tr>
+    </tbody>
+</table>

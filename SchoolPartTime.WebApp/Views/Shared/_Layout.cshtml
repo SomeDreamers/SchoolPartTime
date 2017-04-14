@@ -39,7 +39,7 @@
                     {
                         <li><a asp-area="" asp-controller="Admin" asp-action="UserList">用户管理</a></li>
                         <li><a asp-area="" asp-controller="Admin" asp-action="JobList">兼职管理</a></li>
-                        <li><a asp-area="" asp-controller="Admin" asp-action="Statics">统计</a></li>
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Statistics">统计</a></li>
                     }
                     else if(Html.ViewContext.HttpContext.User.Identity.Role() == RoleType.Business.GetDescription())
                     {

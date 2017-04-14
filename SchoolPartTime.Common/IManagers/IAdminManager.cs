@@ -33,5 +33,11 @@ namespace SchoolPartTime.Common.IManagers
         /// <param name="id"></param>
         /// <returns></returns>
         Task<ReturnResult> DeleteJobAsync(long id);
+
+        /// <summary>
+        /// 获取统计数据
+        /// </summary>
+        /// <returns></returns>
+        Task<StaticticsModel> GetStaticticsModelAsync();
     }
 }

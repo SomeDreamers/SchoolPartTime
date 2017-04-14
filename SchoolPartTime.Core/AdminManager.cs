@@ -81,5 +81,27 @@ namespace SchoolPartTime.Core
             return result;
         }
         #endregion
+
+        #region 数据统计
+        /// <summary>
+        /// 获取统计数据
+        /// </summary>
+        /// <returns></returns>
+        public async Task<StaticticsModel> GetStaticticsModelAsync()
+        {
+            //统计用户数据
+            UserStatistics userStatistics = new UserStatistics();
+            userStatistics.TotalUserCount = await context.User.CountAsync();
+            userStatistics.SysUserCount = await context.User.Where(c => c.Role == (int)RoleType.System).CountAsync();
+            userStatistics.StudentUserCount = await context.User.Where(c => c.Role == (int)RoleType.User).CountAsync();
+            userStatistics.BusiUserCount = await context.User.Where(c => c.Role == (int)RoleType.Business).CountAsync();
+            //统计兼职数据
+            JobStatistics jobStatistics = new JobStatistics();
+            jobStatistics.TotalJobCount = await context.Job.CountAsync();
+            jobStatistics.FinishJobCount = await context.Job.Where(c => c.Status == (int)JobStatus.Finished).CountAsync();
+            jobStatistics.UnderwayJobCount = await context.Job.Where(c => c.Status == (int)JobStatus.Underway).CountAsync();
+            return new StaticticsModel { UserStatistics = userStatistics, JobStatistics = jobStatistics };
+        }
+        #endregion
     }
 }
