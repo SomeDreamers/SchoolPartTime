@@ -132,6 +132,7 @@ namespace SchoolPartTime.WebApp.Controllers
         /// <returns></returns>
         public async Task<IActionResult> AllJob(JobQuery query)
         {
+            await jobManager.JudgeStatus();
             query.Status = (int)JobStatus.Underway;
             JobListView result = await jobManager.GetJobListAsync(query);
             return View("AllJob",result);

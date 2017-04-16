@@ -90,6 +90,7 @@ namespace SchoolPartTime.WebApp.Controllers
         /// <returns></returns>
         public async Task<IActionResult> JobList(JobQuery query)
         {
+            await jobManager.JudgeStatus();
             return View(await jobManager.GetJobListAsync(query));
         }
 
